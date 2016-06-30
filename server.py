@@ -50,6 +50,7 @@ class HouseLoadProfile:
         N_day = req.get_param_as_int('N_day') or 0
         N_night = req.get_param_as_int('N_night') or 0
         Ls_App = req.get_param_as_list('Ls_App') or []
+        Ls_App = map(int, Ls_App)
 
         try:
             result = house.get_household_load_profile(N_room, N_day, N_night, Ls_App)
