@@ -14,6 +14,8 @@ import sqlite3
 			Estimated TOU-B plan monthly cost($) for summer/winter
 		EV_Cost:	2 elements list
 			Estimated EV plan monthly cost($) for summer/winter
+		E1:		Int
+			Estimated E1 plan monthly cost($) 
 
 
 '''
@@ -32,7 +34,7 @@ Tariff_EV=pd.read_sql('SELECT * FROM Tariff_EV',conn)
 
 
 def Monthly_Cost(Daily_Loading):
-	TOUA_Cost=[0,0];TOUB_Cost=[0,0];EV_Cost=[0,0];
+	E1=0;TOUA_Cost=[0,0];TOUB_Cost=[0,0];EV_Cost=[0,0];
 	TOUA_wd=[0,0];TOUA_we=[0,0];TOUB_wd=[0,0];TOUB_we=[0,0];EV_wd=[0,0];EV_we=[0,0]
 	#Calculate TOU-A,TOU-B Tariff Cost
 	Total_Daily_Com=sum(Daily_Loading)/float(4)			#Summation of daily consumption based on the 15mins loading profiles
@@ -106,7 +108,15 @@ def Monthly_Cost(Daily_Loading):
 			Cost_winter=float(Tariff_EV[Tariff_EV['Paras']=='Off_Peak']['EV_winter'])
 		EV_we[0]+=Daily_Loading[4*i]*Cost_summer
 		EV_we[1]+=Daily_Loading[4*i]*Cost_winter
-
+	#Calculate the E1 Plan
+	E1_allowance=10										#Assume the allowance is 10	
+	if Total_Daily_Com<E1_allowance:
+		E1+=Total_Daily_Com*0.18212
+	elif Total_Daily_Com>E1_allowance and Total_Daily_Com<20:
+		E1+=(Total_Daily_Com-10)*0.2409+0.18212*10
+	else:
+		E1+=0.18212*10+0.2409*10+(Total_Daily_Com-20)*0.4
+	E1*=30											#Convert Daily Cost Estimation to Monthly Cost Estimation
 	#Calculate Monthly Results based on the Daily Results: 22Weekday,8Weekend day eavh month
 
 	TOUA_Cost[0]=22*TOUA_wd[0]+8*TOUA_we[0]
@@ -116,4 +126,4 @@ def Monthly_Cost(Daily_Loading):
 	EV_Cost[0]=22*EV_wd[0]+8*EV_we[0]
 	EV_Cost[1]=22*EV_wd[1]+8*EV_we[1]
 
-	return TOUA_Cost,TOUB_Cost,EV_Cost
+	return TOUA_Cost,TOUB_Cost,EV_Cost,E1
