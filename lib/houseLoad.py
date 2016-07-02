@@ -158,7 +158,7 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
     for Def_Item in Def_Load_Index:
         Def_Loading=Cust_Def['Average Daily Consumption(KWh)'][Def_Item]
         Def_Duration=Baseline(Cust_Profile,Def_Loading)
-        Def_Duration=Def_Load_Interval(Def_Duration)
+        Def_Duration=Def_Load_Interval(Def_Duration,Cust_Profile)
         if Def_Duration !=None:
             if len(Def_Duration)>1:
                 Deferred_Matrix[(Def_Item-1,Def_Duration[0])]=Def_Loading
