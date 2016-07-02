@@ -43,7 +43,7 @@ Ave_Input=pd.read_sql('SELECT * FROM Pred_Monthly_Cost',conn).as_matrix()
     Return:
         Cust_profile:        numpy Vector
             24 hour profile for baseline model
-        Deferred_Matrix:    3*25 numpy matrix
+        Deferred_Matrix:    3*97 numpy matrix
             Possible Deferred Loading and its Duration During the day
 '''
 ################ Example Modeling Input####################
@@ -142,7 +142,7 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
     '''
         Paras:
             Deferred_Matrix: numpy matrix
-                3*25 size matrix of the corresponse deferred consumption for each of the three appliances
+                3*97 size matrix of the corresponse deferred consumption for each of the three appliances
             Def_duration: List
                 Starting and Ending time of the deferred Load during the peak Hours.
                 The Starting and Ending time is the first two hour in the possible duration
