@@ -153,7 +153,7 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
                 Time of each deferred load could happen in one day.
     '''
 
-    Deferred_Matrix=np.zeros((3,100))         #Initialize Matrix
+    Deferred_Matrix=np.zeros((3,97))         #Initialize Matrix
 
     for Def_Item in Def_Load_Index:
         Def_Loading=Cust_Def['Average Daily Consumption(KWh)'][Def_Item]
