@@ -6,7 +6,7 @@ Created on Mon Jun 27 10:56:10 2016
 
 Test URL:
 http://localhost:8000/ev/load/?distance=50&maker=Nissan&model=Leaf&year=2015&charger=2
-http://localhost:8000/house/load/?N_room=1&N_day=1&N_night=1&Ls_App=1,1,1,1,1,0
+http://localhost:8000/house/load/?N_room=1&N_day=1&N_night=1&Ls_App=1,1,1,1,1,0&Monthly_Cost=0&Monthly_KWh=0
 """
 
 import falcon
@@ -51,9 +51,11 @@ class HouseLoadProfile:
         N_night = req.get_param_as_int('N_night') or 0
         Ls_App = req.get_param_as_list('Ls_App') or []
         Ls_App = map(int, Ls_App)
+        Cust_Monthly_Cost = req.get_param_as_int('Monthly_Cost') or 0
+        Cust_Monthly_KWh = req.get_param_as_int('Monthly_KWh') or 0
 
         try:
-            result = house.get_household_load_profile(N_room, N_day, N_night, Ls_App)
+            result = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh)
         except Exception as ex:
             self.logger.error(ex)
             description = ('Aliens have attacked our base! We will '
@@ -81,9 +83,11 @@ class EnergyCost:
         N_night = req.get_param_as_int('N_night') or 0
         Ls_App = req.get_param_as_list('Ls_App') or []
         Ls_App = map(int, Ls_App)
+        Cust_Monthly_Cost = req.get_param_as_int('Monthly_Cost') or 0
+        Cust_Monthly_KWh = req.get_param_as_int('Monthly_KWh') or 0
         
         try:
-            result_house = house.get_household_load_profile(N_room, N_day, N_night, Ls_App)
+            result_house = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh)
             result_ev = ev.get_load_profile(distance, maker, model, year, charger, 0, 2)
         except Exception as ex:
             self.logger.error(ex)
