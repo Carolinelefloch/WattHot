@@ -1,0 +1,88 @@
+,make,model,year
+0,Nissan,Leaf,2011
+1,smart,fortwo electric drive cabriolet,2011
+2,smart,fortwo electric drive coupe,2011
+3,Mitsubishi,i-MiEV,2012
+4,Azure Dynamics,Transit Connect Electric Van,2012
+5,Azure Dynamics,Transit Connect Electric Wagon,2012
+6,Nissan,Leaf,2012
+7,BMW,Active E,2011
+8,CODA Automotive,CODA,2012
+9,Ford,Focus Electric,2012
+10,Tesla,Model S,2012
+11,Ford,Focus Electric,2013
+12,Honda,Fit EV,2013
+13,smart,fortwo electric drive convertible,2013
+14,smart,fortwo electric drive coupe,2013
+15,Scion,iQ EV,2013
+16,Toyota,RAV4 EV,2012
+17,CODA Automotive,CODA,2013
+18,Mitsubishi,i-MiEV,2013
+19,Tesla,Model S (60 kW-hr battery pack),2013
+20,Tesla,Model S (85 kW-hr battery pack),2013
+21,BYD,e6,2012
+22,Fiat,500e,2013
+23,Toyota,RAV4 EV,2013
+24,Nissan,Leaf,2013
+25,Tesla,Model S (40 kW-hr battery pack),2013
+26,Chevrolet,Spark EV,2014
+27,Honda,Fit EV,2014
+28,Ford,Focus Electric,2014
+29,Fiat,500e,2014
+30,smart,fortwo electric drive convertible,2014
+31,smart,fortwo electric drive coupe,2014
+32,Toyota,RAV4 EV,2014
+33,Nissan,Leaf,2014
+34,Tesla,Model S (85 kW-hr battery pack),2014
+35,Tesla,Model S (60 kW-hr battery pack),2014
+36,BYD,e6,2014
+37,BYD,e6,2013
+38,Mitsubishi,i-MiEV,2014
+39,Nissan,Leaf,2015
+40,Chevrolet,Spark EV,2015
+41,Fiat,500e,2015
+42,BMW,i3 BEV,2014
+43,Mercedes-Benz,B-Class Electric Drive,2014
+44,Kia,Soul Electric,2015
+45,Volkswagen,e-Golf,2015
+46,smart,fortwo electric drive convertible,2015
+47,smart,fortwo electric drive coupe,2015
+48,Mercedes-Benz,B-Class Electric Drive,2015
+49,Ford,Focus Electric,2015
+50,Tesla,Model S (85 kW-hr battery pack),2015
+51,Tesla,Model S AWD (85 kW-hr battery pack),2014
+52,Tesla,Model S AWD - P85D,2015
+53,Tesla,Model S AWD - 85D,2015
+54,BMW,i3 BEV,2015
+55,Tesla,Model S (60 kW-hr battery pack),2015
+56,Mitsubishi,i-MiEV,2016
+57,Tesla,Model S AWD - 70D,2015
+58,BYD,e6,2015
+59,Kia,Soul Electric,2016
+60,Tesla,Model S AWD - 90D,2015
+61,Tesla,Model S AWD - P90D,2015
+62,Volkswagen,e-Golf,2016
+63,smart,fortwo electric drive convertible,2016
+64,smart,fortwo electric drive coupe,2016
+65,Ford,Focus Electric,2016
+66,Tesla,Model X AWD - 90D,2016
+67,Tesla,Model X AWD - P90D,2016
+68,Chevrolet,Spark EV,2016
+69,Mercedes-Benz,B250e,2016
+70,Nissan,Leaf (24 kW-hr battery pack),2016
+71,Nissan,Leaf (30 kW-hr battery pack),2016
+72,Fiat,500e,2016
+73,BMW,i3 BEV,2016
+74,Tesla,Model S (70 kW-hr battery pack),2016
+75,Tesla,Model S (85 kW-hr battery pack),2016
+76,Tesla,Model S (90 kW-hr battery pack),2016
+77,Tesla,Model S (90 kW-hr battery pack),2015
+78,Tesla,Model S AWD - 70D,2016
+79,Tesla,Model S AWD - 85D,2016
+80,Tesla,Model S AWD - 90D,2016
+81,Tesla,Model S AWD - P85D,2016
+82,Tesla,Model S AWD - P90D,2016
+83,Mitsubishi,i-MiEV,2017
+84,Tesla,Model S (75 kW-hr battery pack),2016
+85,Tesla,Model S AWD - 75D,2016
+86,Tesla,Model X AWD - 75D,2016
