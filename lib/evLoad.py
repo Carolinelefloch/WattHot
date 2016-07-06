@@ -46,7 +46,7 @@ class EV:
     charging_load_data = [1.4, 4.8, 7.2, 9.6] #kW
 
 
-    def get_load_profile(self, distance, ev_maker, ev_model,  ev_year, charger_type, start, hourly_resolution):
+    def get_load_profile(self, distance, ev_maker, ev_model,  ev_year, charger_type, start=0, hourly_resolution=4):
         self.cur.execute('SELECT combE, range, acceptanceR FROM spec WHERE make = ? AND model = ? AND year = ? LIMIT 1', (ev_maker, ev_model, ev_year))
         data = self.cur.fetchone()
         if data is None:
@@ -64,9 +64,10 @@ class EV:
     
         # compute charging time
         charging_time = consumption_rate * distance / 100 / charging_load
+        t = int(math.ceil(charging_time * hourly_resolution))  # round up the time
         N = 24 * hourly_resolution + 1
-        if charging_time < N:
-            t = int(math.ceil(charging_time*2))  # round up the time
+
+        if t < N-start:
             load_profile = [0]*start + [charging_load]*t + [0]*(N-t-start)
         else:
             load_profile = [0]*start + [charging_load]*(N-start)

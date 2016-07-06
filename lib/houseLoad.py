@@ -49,7 +49,7 @@ Ave_Input=pd.read_sql('SELECT * FROM Pred_Monthly_Cost',conn).as_matrix()
 ################# Example Modeling Input####################
 #N_day=2;N_night=4;N_room=1;Ls_App=[1,0,1,1,1,0]                                 #The Input here shouble be achieved from Website
 ################################################## 
-def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,Cust_Monthly_KWh=0):
+def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,Cust_Monthly_KWh=0, connection_time=[0, 0, 0]):
 
     def Ave_KWh(N_room, N_day, N_night):
         N_people=N_day+N_night
@@ -172,9 +172,18 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
                 Deferred_Matrix[(Def_Item-1,Def_Duration[2])]=Def_Loading 
                 Deferred_Matrix[(Def_Item-1,Def_Duration[3])]=Def_Loading         #Resulted Deferred Loading Plot
         Cust_Profile-=Deferred_Matrix[Def_Item-1]                                  #Index Shifting
+    
+    for i in range(3):
+        t = connection_time[i]
+        if t > 0:
+            Deferred_Matrix[i,:] = np.pad(Deferred_Matrix[i,:-t], (t,0), 'constant')
 
     return {
         'Cust_Total_Profile':Cust_Total_Profile.tolist(),
         'Cust_Profile':Cust_Profile.tolist(),
         'Deferred_Matrix':Deferred_Matrix.tolist()
+#        'Deferred_Load_Profile1': load_profile1,
+#        'Deferred_Load_Profile2': load_profile2,
+#        'Deferred_Load_Profile3': load_profile3
         }
+# Dishwasher, Clothes Washed, and Dryer
