@@ -95,9 +95,11 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
         Pred_Ave_KWh=Ave_KWh(N_room,N_day,N_night)                              #Predicted Average Consumption KWh
     #Cosr or KWh is given    
     if Cust_Monthly_Cost==0 and Cust_Monthly_KWh !=0:
-        Pred_Ave_KWh=Cust_MOnthly_KWh
+        Pred_Ave_KWh=Cust_Monthly_KWh
     if Cust_Monthly_Cost !=0 and Cust_Monthly_KWh==0:
         Pred_Ave_KWh=Cost_to_KWh(Cust_Monthly_Cost)
+    if Cust_Monthly_Cost !=0 and Cust_Monthly_KWh !=0:
+        Pred_Ave_KWh=Cust_Monthly_KWh
 
     Cust_Profile=copy.copy(Matching(Input_List))
     Cust_Profile*=Pred_Ave_KWh                                                    #Resulted 24 vector Total consumption
