@@ -86,6 +86,7 @@ class EnergyCost:
         Cust_Monthly_Cost = req.get_param_as_int('Monthly_Cost') or 0
         Cust_Monthly_KWh = req.get_param_as_int('Monthly_KWh') or 0
         conn_time = map(int, req.get_param_as_list('time') or [0]*4)
+        allowance = req.get_param_as_int('allowance') or 0
 
         try:
             Cust_Total_Profile, Cust_Profile, Deferred_Matrix = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh, conn_time[:3])
@@ -95,7 +96,7 @@ class EnergyCost:
                 Household_Total=Cust_Total_Profile,
                 Household=Cust_Profile,
                 Def_Load=Deferred_Matrix,
-                Monthly_allowance=10,
+                Monthly_allowance=allowance,
                 EV_Load=ev_data['load_profile'],
                 No_EV=5,
                 No_Def=2)
