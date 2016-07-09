@@ -10,6 +10,7 @@ import json
 import logging
 from lib import evLoad
 from lib import houseLoad as house
+from lib import Week4_Monthly_Cost as cost
 ev = evLoad.EV('db/ev_model.db')
 
 class EvLoadProfile:
@@ -50,7 +51,12 @@ class HouseLoadProfile:
         Cust_Monthly_KWh = req.get_param_as_int('Monthly_KWh') or 0
 
         try:
-            result = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh)
+            Cust_Total_Profile, Cust_Profile, Deferred_Matrix = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh)
+            result = {
+                'Cust_Total_Profile':Cust_Total_Profile.tolist(),
+                'Cust_Profile':Cust_Profile.tolist(),
+                'Deferred_Matrix':Deferred_Matrix.tolist()
+            }
         except Exception as ex:
             self.logger.error(ex)
             description = ('Aliens have attacked our base! We will '
@@ -82,8 +88,17 @@ class EnergyCost:
         conn_time = map(int, req.get_param_as_list('time') or [0]*4)
 
         try:
-            result_house = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh, conn_time[:3])
-            result_ev = ev.get_load_profile(distance, maker, model, year, charger, conn_time[3])
+            Cust_Total_Profile, Cust_Profile, Deferred_Matrix = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh, conn_time[:3])
+#            house_data = house.get_household_load_profile(N_room, N_day, N_night, Ls_App, Cust_Monthly_Cost, Cust_Monthly_KWh, conn_time[:3])
+            ev_data = ev.get_load_profile(distance, maker, model, year, charger, conn_time[3])
+            result_cost = cost.get_cost(
+                Household_Total=Cust_Total_Profile,
+                Household=Cust_Profile,
+                Def_Load=Deferred_Matrix,
+                Monthly_allowance=10,
+                EV_Load=ev_data['load_profile'],
+                No_EV=5,
+                No_Def=2)
         except Exception as ex:
             self.logger.error(ex)
             description = ('Aliens have attacked our base! We will '
@@ -94,9 +109,8 @@ class EnergyCost:
                 'Service Outage',
                 description,
                 30)
-        
-        # TODO: call cost computing function
-        resp.body = json.dumps(result_house)
+
+        resp.body = json.dumps(result_cost)
 
 app = falcon.API()
 ev_load_profile = EvLoadProfile()

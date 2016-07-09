@@ -178,12 +178,10 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
         if t > 0:
             Deferred_Matrix[i,:] = np.pad(Deferred_Matrix[i,:-t], (t,0), 'constant')
 
-    return {
-        'Cust_Total_Profile':Cust_Total_Profile.tolist(),
-        'Cust_Profile':Cust_Profile.tolist(),
-        'Deferred_Matrix':Deferred_Matrix.tolist()
-#        'Deferred_Load_Profile1': load_profile1,
-#        'Deferred_Load_Profile2': load_profile2,
-#        'Deferred_Load_Profile3': load_profile3
-        }
+    return Cust_Total_Profile, Cust_Profile, Deferred_Matrix
+#    return {
+#        'Cust_Total_Profile':Cust_Total_Profile.tolist(),
+#        'Cust_Profile':Cust_Profile.tolist(),
+#        'Deferred_Matrix':Deferred_Matrix.tolist()
+#        }
 # Dishwasher, Clothes Washed, and Dryer
