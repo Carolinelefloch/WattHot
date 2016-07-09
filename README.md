@@ -29,7 +29,7 @@ http://localhost:8000/cost/?distance=50&maker=Nissan&model=Leaf&year=2015&charge
 <li>Connection time - List Element </li>
 <li>Allowance </li>
 </ol>
-<p>Ouputs: vector of cost for each utility rate</p>
+<p>Ouputs: vector of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
 <ol>
 <li>Total_W: Total monthly cost during winter</li>
 <li>Total_S: Total monthly cost during summer</li>
