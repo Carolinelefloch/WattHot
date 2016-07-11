@@ -135,7 +135,8 @@ def get_cost(Household_Total,Household,Def_Load,Monthly_allowance,EV_Load,No_EV=
     Total_Cost_Winter=[round(i,2) for i in Total_Cost_Winter]
 #    Plan_Cost_Summer=[Household_Cost_Summer,Deferred_Cost_Summer,EV_Cost_Summer,Total_Cost_Summer]
 #    Plan_Cost_Winter=[Household_Cost_Winter,Deferred_Cost_Winter,EV_Cost_Winter,Total_Cost_Winter]
+    Name_Output=[['PG&E','ETOU-A'],['PG&E','ETOU-B'],['PG&E','EV'],['PG&E','E1']]
     Plan_Cost={'House_S':Household_Cost_Summer.tolist(),'Def_S':Deferred_Cost_Summer.tolist(),'EV_S':EV_Cost_Summer.tolist(),'Total_S':Total_Cost_Summer,
          'House_W':Household_Cost_Winter.tolist(),'Def_W':Deferred_Cost_Winter.tolist(),'EV_W':EV_Cost_Winter.tolist(),'Total_W':Total_Cost_Winter}
-
-    return Plan_Cost
+    Plan_Name={'Plan_Name':Name_Output.tolist()}     
+    return Plan_Name,Plan_Cost
