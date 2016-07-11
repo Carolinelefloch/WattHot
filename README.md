@@ -39,5 +39,5 @@ http://localhost:8000/cost/?distance=50&maker=Nissan&model=Leaf&year=2015&charge
 <li>Def_S: Deferrable loads: monthly cost during summer (Dishwasher,Clothes Washer,Dryer) </li>
 <li>EV_W: EV monthly cost during winter</li>
 <li>EV_S: EV monthly cost during summer</li>
-<li>Plan_Name: Name of the four PG&E Plan</li>
+<li>Plan_Name: List of the Utility name and the PG&E plan name</li>
 </ol>
