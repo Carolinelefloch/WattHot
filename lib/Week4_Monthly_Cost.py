@@ -140,5 +140,5 @@ def get_cost(Household_Total,Household,Def_Load,Monthly_allowance,EV_Load,No_EV=
          #'House_W':Household_Cost_Winter.tolist(),'Def_W':Deferred_Cost_Winter.tolist(),'EV_W':EV_Cost_Winter.tolist(),'Total_W':Total_Cost_Winter}
     Plan_Cost={'Plan_Name':Name_Output,'House_S':Household_Cost_Summer.tolist(),'Def_S':Deferred_Cost_Summer.tolist(),'EV_S':EV_Cost_Summer.tolist(),'Total_S':Total_Cost_Summer,
         'House_W':Household_Cost_Winter.tolist(),'Def_W':Deferred_Cost_Winter.tolist(),'EV_W':EV_Cost_Winter.tolist(),'Total_W':Total_Cost_Winter}
-   
+    #Add Name of Plan to the Output
     return Plan_Cost
