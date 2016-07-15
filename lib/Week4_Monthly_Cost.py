@@ -48,7 +48,7 @@ rate=pd.read_sql('SELECT * FROM PG_and_E',conn)
 
 '''
 
-def get_cost(Household_Total,Household,Def_Load,EV_Load,Monthly_allowance=350,No_EV=5,No_Def=2):
+def get_cost(Household_Total,Household,Monthly_allowance,Def_Load,EV_Load,No_EV=5,No_Def=2):
     #Calculate Tier for each day of the month
     #Total_load=[x1+x2+x3+x4+x5+x6 for x1,x2,x3,x4,x5,x6]#
 
