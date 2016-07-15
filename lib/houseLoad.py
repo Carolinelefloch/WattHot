@@ -53,6 +53,8 @@ def get_household_load_profile(N_room, N_day,N_night,Ls_App,Cust_Monthly_Cost=0,
 
     def Ave_KWh(N_room, N_day, N_night):
         N_people=N_day+N_night
+        if N_people==0:
+            N_people+=1
         N_people-=1;N_room-=1   #Index Shifting                                        
         return Ave_Input[(N_people,N_room)]
 
