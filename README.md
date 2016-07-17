@@ -26,7 +26,7 @@ http://localhost:8000/cost/?distance=50&maker=Nissan&model=Leaf&year=2015&charge
 <li>Ls_App: Extra appliances: 1/0:Yes/No - List Element:[Stove,Dishwasher,Clothes Washer,Dryer,Swimming Pool,HVAC] </li>
 <li> Cust_Monthly_Cost Monthly electricity cost($) of customer; default value: 0 - may not be given by customer </li>
 <li> Cust_MOnthly_KWh: Monthly electricity consumption(KWh) of customer; default value:0. May not be given by customer if Cust_Monthly_Cost is given, then Cust_MOnthly_KWh will not be required </li>
-<li>Connection time - List Element </li>
+<li>Connection time: connection time of household appliances and EV (time step: 15 minutes) - List Element:[house1, house2, house3, EV] </li>
 <li>Allowance </li>
 </ol>
 <p>Ouputs: vector of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
