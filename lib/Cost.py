@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 '''
-Created on July 27 2016
+Created on Aug 3 2016
 @author: David
 
 
 Design the Cost class to integrate the consumption prediction and cost calculation function.
 
+Convert the Input Cost to the consumption to the Cost
+
 Assumption:
-1. For Tier and TOU and Tier Type(TOU 1,1,0 type) Rate Calculation. Tier Arrangement based on the customer's cost
+	1. For Tier and TOU and Tier Type(TOU 1,1,0 type) Rate Calculation. Tier Arrangement based on the customer's cost
         	No.Tier 1=30 cost <70
 			No.Tier 1=20;No.Tier 2=10 if cost>70 and cost<120
 			No.Tier 1=15;No.Tier 2=15 if cost>120
-	2. Monthly Allowance retrieve directly from the Tariff book database
+	2. Monthly Allowance retrieve directly from the Tariff book database(Not related to the Zip Code)
 	3.Assuming the season of the customer cost input is average of Summer Cost and Winter Cost to Estimate the Monthly electricity consumption
 
 '''
@@ -19,9 +21,6 @@ Assumption:
 import pandas as pd
 import numpy as np
 import json
-from itertools import groupby
-import operator
-from operator import itemgetter
 import copy
 import sqlite3
 
@@ -69,17 +68,65 @@ class Cost:
 	Function:
 				Get_EV_Def_Cost:			Return cost of EV load, water pump load, and HVAC load.
 
+				Get_Monthly_Consumption:	Convet the Cost to Monthly Consumption	
+				Return the monthly electricity consumption based on the input monthly cost
 
-				Get_Monthly_Consumption:	Return the monthly electricity consumption based on the input monthly cost
-
-				Get_Cost:					Return the overall cost,ev cost,deferred cost,household cost of all rate given the name of the utility
+				Get_Cost:					Convert the Consumption to Cost
+				Return the overall cost,ev cost,deferred cost,household cost of all rate given the name of the utility
 	'''
+	def Get_Allowance(self,Input_Name):
+		command=(
+					'''
+					SELECT Allowance from Rate_Information
+					INNER JOIN Utility_Rate_Name
+					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
+					WHERE Utility_Name=? AND Rate_Name=?
+					'''
+					)
+		Allowance=self.c1.execute(command,Input_Name).fetchall()[0]
+		Allowance=Allowance[0]
+				
+		if Allowance=='Na':
+			Allowance=[10000000]
+			N_Tier=1
+		else:
+			Allowance=json.loads(Allowance)
+			N_Tier=len(Allowance)+1
+		return Allowance,N_Tier
+
+	def Get_Tier_Rate(self,Input_Name):
+		command=(
+					'''
+					SELECT Tier_Rate	 from Rate_Information
+					INNER JOIN Utility_Rate_Name
+					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
+					WHERE Utility_Name=? AND Rate_Name=?	
+					'''
+						)
+		Tier_Tariff=self.c1.execute(command,Input_Name).fetchall()[0][0]		
+		Tier_Tariff=json.loads(Tier_Tariff)
+		return Tier_Tariff
+	def Get_Hourly_Rate(self,Input):
+		command=(
+					'''
+					SELECT * from Hourly_Rate
+					INNER JOIN Utility_Rate_Name
+					ON Hourly_Rate.Rate_id == Utility_Rate_Name.Rate_id
+					WHERE Utility_Name=? AND Rate_Name=? And Tier=? and Week_day=? and Season=?
+					'''
+				)
+		Rate_Vector=self.c1.execute(command,Input).fetchall()
+		try:
+			Rate_Vector=Rate_Vector[0][5:102]
+		except TypeError:
+			print 'Type Error for Query Results'
+		return Rate_Vector
 
 	def Get_EV_Def_Cost(self,Charging_Outside,Utility_Name,Rate_Name,EV_Load,Ls_App,No_EV=5,Cost=0):
 		###################################################################
 		#######If Charging the EV outside the home,half the EV Load########
 		###################################################################
-
+		Input_Name=(Utility_Name,Rate_Name)
 		if Charging_Outside==1:														
 			EV_Load=map(lambda x:x/float(2),EV_Load)
 		if Ls_App[4]==0 and Ls_App[5]==0 and np.unique(EV_Load).tolist()==[0]:
@@ -90,63 +137,23 @@ class Cost:
 		if Ls_App[5]==1:
 			Adj_EV_Load=map(lambda x:x+0.356,Adj_EV_Load)
 
-		Input_Name=(Utility_Name,Rate_Name)
-		command=(
-					'''
-					SELECT Number_Tier from Rate_Information
-					INNER JOIN Utility_Rate_Name
-					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-					WHERE Utility_Name=? AND Rate_Name=?
-						
-					'''
-				)
-		N_Tier=self.c1.execute(command,Input_Name).fetchall()[0][0]
-
 		command=(
 					'''
 					SELECT TIER_Type from Rate_Information
 					INNER JOIN Utility_Rate_Name
 					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
 					WHERE Utility_Name=? AND Rate_Name=?
-					
 					'''
 				)
 
 		Tier_Type=self.c1.execute(command,Input_Name).fetchall()[0]
 		Tier_Type=Tier_Type[0]
-		command=(
-					'''
-					SELECT Allowance from Rate_Information
-					INNER JOIN Utility_Rate_Name
-					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-					WHERE Utility_Name=? AND Rate_Name=?
-					
-					'''
-					)
-		Allowance=self.c1.execute(command,Input_Name).fetchall()[0]
-		Allowance=Allowance[0]
 		
-		if Allowance !='Na':
-			Allowance=json.loads(Allowance)
-
-			command=(
-						'''
-						SELECT Tier_Rate	 from Rate_Information
-						INNER JOIN Utility_Rate_Name
-						ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-						WHERE Utility_Name=? AND Rate_Name=?
-						
-						'''
-					)
-			Tier_Tariff=self.c1.execute(command,Input_Name).fetchall()[0][0]
-			Tier_Tariff=json.loads(Tier_Tariff)
-			Allowance_Cost=[];[Allowance_Cost.append(Allowance[i]*Tier_Tariff[i]) for i in range(len(Allowance))]
-
+		Allowance,N_Tier=self.Get_Allowance(Input_Name)
 		Daily_Cost=Cost/float(30)
 
 		def Get_Tier_Array(Daily_Cost,Allowance_Cost):
 			Acc_Cost=0;Tier=[]
-
 
 			for day in range(30):
 				Acc_Cost+=Daily_Cost
@@ -164,6 +171,8 @@ class Cost:
 		elif Tier_Type==1 and N_Tier==1:
 			Tier=[];[Tier.append(0) for i in range(30)]							
 		else:
+			Tier_Tariff=self.Get_Tier_Rate(Input_Name)
+			Allowance_Cost=[];[Allowance_Cost.append(Allowance[i]*Tier_Tariff[i]) for i in range(len(Allowance))]
 			Tier=Get_Tier_Array(Daily_Cost,Allowance_Cost)
 
 		EV_Cost_Summer=0;EV_Cost_Winter=0;Season=['summer','winter']
@@ -171,19 +180,8 @@ class Cost:
 			for index in range(30):
 				T=Tier[index];W=self.Week_day[index]
 				Input=(Utility_Name,Rate_Name,T,W,S)
-				command=(
-					'''
-					SELECT * from Hourly_Rate
-					INNER JOIN Utility_Rate_Name
-					ON Hourly_Rate.Rate_id == Utility_Rate_Name.Rate_id
-					WHERE Utility_Name=? AND Rate_Name=? And Tier=? and Week_day=? and Season=?
-					'''
-				)
-				Rate_Vector=self.c1.execute(command,Input).fetchall()
-				try:
-					Rate_Vector=Rate_Vector[0][5:102]
-				except IndexError:
-					print 'Type Error for Query Results:'+str(Rate_Vector)
+				
+				Rate_Vector=self.Get_Hourly_Rate(Input)
 				if S=='summer':
 					EV_Cost_Summer+=sum(np.multiply(Adj_EV_Load,Rate_Vector))/float(4)
 				else:
@@ -210,6 +208,7 @@ class Cost:
 				return self.Profile['Profile 3']
 			else:
 				return self.Profile['Profile 2']
+	
 	def Get_Monthly_Consumption(self,Charging_Outside,Utility_Name,Rate_Name,N_room, N_day,N_night,Ls_App,EV_Load,Cost,No_EV=5):
 	#Put three input(number of day/night/room) to a List
 		def Input_Ls(N_day=None,N_night=None,Ls_App=[]):                
@@ -236,7 +235,6 @@ class Cost:
 					INNER JOIN Utility_Rate_Name
 					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
 					WHERE Utility_Name=? AND Rate_Name=?
-					
 					'''
 					)
 			Monthly_Fixed_Fee=self.c1.execute(command,Input_Name).fetchall()[0][0]
@@ -258,46 +256,11 @@ class Cost:
 			#####Calculating the TIER type consumption###
 			#############################################
 			if Cust_Rate_type=='TIER':
-				command=(
-					'''
-					SELECT Allowance from Rate_Information
-					INNER JOIN Utility_Rate_Name
-					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-					WHERE Utility_Name=? AND Rate_Name=?
-					
-					'''
-					)
-				Allowance=self.c1.execute(command,Input_Name).fetchall()[0]
-				Allowance=Allowance[0]
-				
-				if Allowance=='Na':
-					Allowance=[10000000]
-					N_Tier=1
-				else:
-					Allowance=json.loads(Allowance)
-					command=(
-					'''
-					SELECT Number_Tier from Rate_Information
-					INNER JOIN Utility_Rate_Name
-					ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-					WHERE Utility_Name=? AND Rate_Name=?
-					
-					'''
-					)
-					N_Tier=self.c1.execute(command,Input_Name).fetchall()[0][0]
 
-				command=(
-						'''
-						SELECT Tier_Rate	 from Rate_Information
-						INNER JOIN Utility_Rate_Name
-						ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-						WHERE Utility_Name=? AND Rate_Name=?
-						
-						'''
-						)
-				Tier_Tariff=self.c1.execute(command,Input_Name).fetchall()[0][0]
-				
-				Tier_Tariff=json.loads(Tier_Tariff)
+				Allowance,N_Tier=self.Get_Allowance(Input_Name)
+
+				Tier_Tariff=self.Get_Tier_Rate(Input_Name)
+				print 'Function Tier_Tariff:  '+str(Tier_Tariff)
 				
 				'''
 				Initial the results
@@ -370,19 +333,8 @@ class Cost:
 						for index in range(30):
 							T=Tier[index];W=self.Week_day[index]
 							Input=(Utility_Name,Rate_Name,T,W,S)
-							command=(
-								'''
-								SELECT * from Hourly_Rate
-								INNER JOIN Utility_Rate_Name
-								ON Hourly_Rate.Rate_id == Utility_Rate_Name.Rate_id
-								WHERE Utility_Name=? AND Rate_Name=? And Tier=? and Week_day=? and Season=?
-								'''
-							)
-							Rate_Vector=self.c1.execute(command,Input).fetchall()
-							try:
-								Rate_Vector=Rate_Vector[0][5:102]
-							except TypeError:
-								print 'Type Error for Query Results'
+					
+							Rate_Vector=self.Get_Hourly_Rate(Input)
 							if S=='summer':
 								TOU_Cost_Summer+=sum(np.multiply(Cust_Profile,Rate_Vector))/float(4)
 							elif S=='winter':
@@ -420,21 +372,8 @@ class Cost:
 						for index in range(30):
 							T=Tier[index];W=self.Week_day[index]
 							Input=(Utility_Name,Rate_Name,T,W,S)
-							command=(
-								'''
-								SELECT * from Hourly_Rate
-								INNER JOIN Utility_Rate_Name
-								ON Hourly_Rate.Rate_id == Utility_Rate_Name.Rate_id
-								WHERE Utility_Name=? AND Rate_Name=? And Tier=? and Week_day=? and Season=?
-
-								'''
-							)
-							Rate_Vector=self.c1.execute(command,Input).fetchall()
 							
-							try:
-								Rate_Vector=Rate_Vector[0][5:102]
-							except TypeError:
-								print 'Type Error for Query Results'
+							Rate_Vector=self.Get_Hourly_Rate(Input)
 							if S=='summer':
 								TOU_Cost_Summer+=sum(np.multiply(Cust_Profile,Rate_Vector))/float(4)
 							else:
@@ -461,7 +400,6 @@ class Cost:
 		return: 30 list vector
 		Tier for each day of the month
 		'''
-
 		command=(
 					'''
 					SELECT Allowance	 from Rate_Information
@@ -521,20 +459,8 @@ class Cost:
 				for day in range(30):
 					T=Cust_Tier[day];D=self.Week_day[day]
 					Input=(Utility_Name,Rate_Name,T,D,S)
-					command=(
-							'''
-							SELECT * from Hourly_Rate
-							INNER JOIN Utility_Rate_Name
-							ON Hourly_Rate.Rate_id == Utility_Rate_Name.Rate_id
-							WHERE Utility_Name=? AND Rate_Name=? And Tier=? and Week_day=? and Season=?
-							'''
-							)
-					Rate_Vector=self.c1.execute(command,Input).fetchall()
-						
-					try:
-						R=Rate_Vector[0][5:102]
-					except TypeError:
-						print 'Type Error for Query Results'
+					
+					R=self.Get_Hourly_Rate(Input)
 					if max(R)>Max_Demand:
 						Max_Demand=max(R)
 					if S=='summer':
@@ -578,8 +504,7 @@ class Cost:
 		Total_Cost_Summer=[round(i,2) for i in Total_Cost_Summer]
 		Total_Cost_Winter=[x+y+z for x,y,z in zip(Household_Cost_Winter,Deferred_Cost_Winter,EV_Cost_Winter)]
 		Total_Cost_Winter=[round(i,2) for i in Total_Cost_Winter]
-		#Total_Cost_Summer=map(lambda x: x+Monthly_Fixed_Fee,Total_Cost_Summer)
-		#Total_Cost_Winter=map(lambda x:x+Monthly_Fixed_Fee,Total_Cost_Winter)
+
 		Plan_Cost_Summer=[Household_Cost_Summer,Deferred_Cost_Summer,EV_Cost_Summer,Total_Cost_Summer]
 		Plan_Cost_Winter=[Household_Cost_Winter,Deferred_Cost_Winter,EV_Cost_Winter,Total_Cost_Winter]
 

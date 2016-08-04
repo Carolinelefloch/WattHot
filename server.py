@@ -10,7 +10,7 @@ import json
 import logging
 from lib import evLoad
 from lib import houseLoad as house
-from lib import Cost_clean as C
+from lib import Cost as C
 ev = evLoad.EV('db/ev_model.db')
 COST=C.Cost('db/Tariff_Rate_New.db','db/Household_15mins.db')
 class EvLoadProfile:
