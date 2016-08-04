@@ -260,7 +260,6 @@ class Cost:
 				Allowance,N_Tier=self.Get_Allowance(Input_Name)
 
 				Tier_Tariff=self.Get_Tier_Rate(Input_Name)
-				print 'Function Tier_Tariff:  '+str(Tier_Tariff)
 				
 				'''
 				Initial the results
