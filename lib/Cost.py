@@ -186,8 +186,11 @@ class Cost:
 					EV_Cost_Summer+=sum(np.multiply(Adj_EV_Load,Rate_Vector))/float(4)
 				else:
 					EV_Cost_Winter+=sum(np.multiply(Adj_EV_Load,Rate_Vector))/float(4)
-		EV_Cost=(EV_Cost_Winter+EV_Cost_Summer)/2
-		return EV_Cost
+		EV_Cost=(EV_Cost_Winter)#+EV_Cost_Summer)/2
+		if EV_Cost<Cost:
+			return EV_Cost
+		else: 
+			return Cost
 
 	def Get_Consumption_Without_Cost(self,N_room, N_day, N_night):
 		N_people=N_day+N_night
