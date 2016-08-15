@@ -83,7 +83,7 @@ class EnergyCost:
         	Utility_Name='PG&E'
 
         Rate_Name = req.get_param('Rate_Name') 
-        if Rate_Name = "I don't know":
+        if Rate_Name == "I don't know":
         	if Utility_Name=='PG&E':
         		Rate_Name='E1'
         	elif Utility_Name=='Duke Energy North Carolina':
