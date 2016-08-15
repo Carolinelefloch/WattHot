@@ -76,11 +76,28 @@ class EnergyCost:
         self.logger = logging.getLogger('evapp.' + __name__)
         
     def on_get(self, req, resp):
-        Utility_Name = req.get_param('Utility_Name') or 'PG&E'
+        Utility_Name = req.get_param('Utility_Name') 
         if Utility_Name=='PG':
             Utility_Name='PG&E'
-        Rate_Name = req.get_param('Rate_Name') or ''
+        if Utility_Name=="I don't know":
+        	Utility_Name='PG&E'
 
+        Rate_Name = req.get_param('Rate_Name') 
+        if Rate_Name = "I don't know":
+        	if Utility_Name=='PG&E':
+        		Rate_Name='E1'
+        	elif Utility_Name=='Duke Energy North Carolina':
+        		Rate_Name='Residential Service Rate'
+        	elif Utility_Name=='Duke Energy South Carolina':
+        		Rate_name='Residential Service'
+        	elif Utility_Name=='Duke Energy Indiana':
+        		Rate_Name='Residential and Farm Service'
+        	elif Utility_Name=='Duke Energy Kentucky':
+        		Rate_Name='Residential Service'
+        	elif Utility_Name=='Duke Energy Ohio':
+        		Rate_Name='Residential Service'
+        	elif Utility_Name=='Duke Energy Florida':
+        		Rate_Name='Residential Service'
         distance = req.get_param_as_int('distance') or 0
         maker = req.get_param('maker') or ''
         model = req.get_param('model') or ''
