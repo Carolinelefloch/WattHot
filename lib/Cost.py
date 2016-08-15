@@ -338,8 +338,13 @@ class Cost:
 								TOU_Cost_Summer+=sum(np.multiply(Cust_Profile,Rate_Vector))/float(4)
 							elif S=='winter':
 								TOU_Cost_Winter+=sum(np.multiply(Cust_Profile,Rate_Vector))/float(4)
+					'''
+					Aug 15 2016 Revision:
 
-					TOU_Cost=(TOU_Cost_Winter+TOU_Cost_Summer)/2
+					Assume the Input Cost is the winter cost insterd of average cost of summer and winter
+
+					'''
+					TOU_Cost=(TOU_Cost_Winter)#+TOU_Cost_Summer)/2
 					return round(Cost/(TOU_Cost+Demand_Cost),2)
 				elif TOU_Type==(1,1,0) or TOU_Type==(1,1,1):
 					command=(
@@ -378,7 +383,7 @@ class Cost:
 							else:
 								TOU_Cost_Winter+=sum(np.multiply(Cust_Profile,Rate_Vector))/float(4)
 					
-					TOU_Cost=(TOU_Cost_Winter+TOU_Cost_Summer)/2
+					TOU_Cost=(TOU_Cost_Winter)#+TOU_Cost_Summer)/2
 					return round(Cost/(TOU_Cost+Demand_Cost),2)
 				
 	def Get_Cost(self,Utility_Name,Household_Total,Household, Def_Load,EV_Load,Charging_Outside,No_EV=5,No_Def=2):
