@@ -16,7 +16,7 @@ http://localhost:8000/cost/?Utility_Name=PG&E&Rate_Name=ETOUA&distance=50&maker=
 ## 4) Description 
 http://localhost:8000/des/?Utility_Name=PG&E
 
-## 3) Cost calculation
+## 5) Eligibility
 http://localhost:8000/eli/?Utility_Name=PG&E
 
 <p>Inputs:</p>
