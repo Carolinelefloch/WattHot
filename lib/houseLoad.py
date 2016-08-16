@@ -49,8 +49,11 @@ Ave_Input=pd.read_sql('SELECT * FROM Pred_Monthly_Cost',conn).as_matrix()
 			Possible Deferred Loading and its Duration During the day
 '''
 ################# Example Modeling Input####################
-#N_day=2;N_night=4;N_room=1;Ls_App=[1,0,1,1,1,0]                                 #The Input here shouble be achieved from Website
-################################################## 
+#N_day=2;N_night=4;N_room=1;Ls_App=[1,0,1,1,1,0]   
+
+#The Input here shouble be achieved from Website
+
+############################################################
 def get_household_load_profile(Consumption,N_room, N_day,N_night,Ls_App,connection_time=[0, 0, 0]):
 
 
@@ -93,11 +96,13 @@ def get_household_load_profile(Consumption,N_room, N_day,N_night,Ls_App,connecti
 	'''
 	Cust_Profile=copy.copy(Matching(Input_List))
 
-	Cust_Profile=map(lambda x:x*Consumption,Cust_Profile)                		#Resulted 24 vector Total consumption
+	Cust_Profile=map(lambda x:x*Consumption,Cust_Profile)                		  
+	#Resulted 24 vector Total consumption
 	
-	if Ls_App[4]==1:                                                            #Adding Swimming Pump Consumption
+	#Adding Swimming Pump Consumption and HVAC Consumption
+	if Ls_App[4]==1:                                                              
 		Cust_Profile=map(lambda x:x+1.12,Cust_Profile)
-	if Ls_App[5]==1:                                                            #Adding HVAC Consumption
+	if Ls_App[5]==1:                                                              
 		Cust_Profile=map(lambda x:x+0.356,Cust_Profile)
 	Cust_Total_Profile=copy.copy(Cust_Profile)
 
@@ -112,20 +117,23 @@ def get_household_load_profile(Consumption,N_room, N_day,N_night,Ls_App,connecti
 	#Find the index that appliance element==1
 	def find_number_in_list(lst, Num):
 		return [i for i, x in enumerate(lst) if x==Num]
-	Def_Load_Index=find_number_in_list(Ls_App[1:4],1)                            #Only [1:4]
-	Def_Load_Index = [x+1 for x in Def_Load_Index]                                #Index Shifting since the List start from 1
+	Def_Load_Index=find_number_in_list(Ls_App[1:4],1)#Only [1:4]
+	#Index Shifting since the List start from 1
+	Def_Load_Index = [x+1 for x in Def_Load_Index]                                
 	Cust_Def=Def_Load.iloc[Def_Load_Index]
 
 	#Find possible hours' index of the duration in the deferred loading
 	def Baseline(lst, num):
 		result=[i for i, x in enumerate(lst) if x>=num ]
-		result=filter(lambda x:x>=15*4 and x<=21*4,result)                        #filter off-peak Hour; Assume 15:00-21:00 is Peak Hour
+		#filter off-peak Hour; Assume 15:00-21:00 is Peak Hour
+		result=filter(lambda x:x>=15*4 and x<=21*4,result)                       
 		return result
 	#find the possible deferred load time interval that in the peak profile 
 	def Def_Load_Interval(lst,Profile):
 		Time_Interval=[]
 		index, value = max(enumerate(Profile[60:85]), key=operator.itemgetter(1))
-		index+=60                                                                #Index Shifting
+		#Index Shifting
+		index+=60                                                                 
 		if index in lst:
 			Time_Interval.append(index)
 			Time_Interval.append(index+1)
@@ -162,7 +170,7 @@ def get_household_load_profile(Consumption,N_room, N_day,N_night,Ls_App,connecti
 				Deferred_Matrix[(Def_Item-1,Def_Duration[1])]=Def_Loading
 				Deferred_Matrix[(Def_Item-1,Def_Duration[2])]=Def_Loading 
 				Deferred_Matrix[(Def_Item-1,Def_Duration[3])]=Def_Loading         #Resulted Deferred Loading Plot
-		Cust_Profile-=Deferred_Matrix[Def_Item-1]                                  #Index Shifting
+		Cust_Profile-=Deferred_Matrix[Def_Item-1]                                 #Index Shifting
 	
 	for i in range(3):
 		t = connection_time[i]

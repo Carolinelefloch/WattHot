@@ -131,7 +131,8 @@ class Cost:
 			EV_Load=map(lambda x:x/float(2),EV_Load)
 		if Ls_App[4]==0 and Ls_App[5]==0 and np.unique(EV_Load).tolist()==[0]:
 			return 0
-		Adj_EV_Load=map(lambda x:x/float(5)*No_EV,EV_Load)							#Calibrate the EV_Load based on No.of day EV used
+		Adj_EV_Load=map(lambda x:x/float(5)*No_EV,EV_Load)							
+		#Calibrate the EV_Load based on No.of day EV used
 		if Ls_App[4]==1:
 			Adj_EV_Load=map(lambda x:x+1.12,Adj_EV_Load)
 		if Ls_App[5]==1:
@@ -306,7 +307,8 @@ class Cost:
 					
 					'''
 					)
-				TOU_Type=self.c1.execute(command,Input_Name).fetchall()[0]     					#TOU_Type:Three element Tuple (1,0,0)
+				TOU_Type=self.c1.execute(command,Input_Name).fetchall()[0]     					
+				#TOU_Type:Three element Tuple (1,0,0)
 				
 				####TOU type and TOU Demand Type, No Tier Type Rate
 
@@ -363,7 +365,8 @@ class Cost:
 
 					Cust_Profile=copy.copy(self.Matching(Input_List))
 					Cust_Demand=float(max(Cust_Profile))
-					Cust_Demand/=float(30)   														#Convert Monthly consumption to Daily Consumption
+					Cust_Demand/=float(30)   														
+					#Convert Monthly consumption to Daily Consumption
 					Demand_Cost=Cust_Demand*Demand_Rate
 									
 					if Cost<=70:
@@ -394,10 +397,12 @@ class Cost:
 			EV_Load=map(lambda x:x/float(2),EV_Load)
 		DT_house=sum(Household_Total)/4
 		DT_EV=sum(EV_Load)/4
-		DT_EV=DT_EV/float(5)*float(No_EV)                                                	#Deduction of number of day EV used
+		DT_EV=DT_EV/float(5)*float(No_EV)                                                	
+		#Deduction of number of day EV used
 		EV_Load_Adj=[i/float(5)*float(No_EV) for i in EV_Load]
 		Def_Load_Adj=[]
-		for i in range(3):                                                                	#Deduction of number of day Deferred Load used
+		for i in range(3):                                                                	
+			#Deduction of number of day Deferred Load used
 			Def_Load_Adj.append([j/float(7)*float(No_Def) for j in Def_Load[i]])
 
 		'''
@@ -440,7 +445,7 @@ class Cost:
 			return Tier
 		
 		#######Initial Output Vector#########
-		Household_Cost_Summer=np.zeros(No_Rate)                                                #[ETOU-A,ETOU-B,EV-TOU,E1] Cost
+		Household_Cost_Summer=np.zeros(No_Rate)                                                
 		Household_Cost_Winter=np.zeros(No_Rate)
 		Deferred_Cost_Summer=np.zeros(No_Rate)
 		Deferred_Cost_Winter=np.zeros(No_Rate)
@@ -471,9 +476,11 @@ class Cost:
 					if max(R)>Max_Demand:
 						Max_Demand=max(R)
 					if S=='summer':
-						Household_Cost_Summer[P]+=round(sum(np.multiply(R,Household))/4,2)    #Divide four to convert 15mins time interval to one hour time interval
+						Household_Cost_Summer[P]+=round(sum(np.multiply(R,Household))/4,2)    
+						#Divide four to convert 15mins time interval to one hour time interval
 						Deferred_Cost_Summer[P]+=round(sum(sum(np.multiply(R,Def_Load_Adj)))/4,2)
-						if D==1:                                                        #Only has EV Load During WeekDay
+						#Only has EV Load During WeekDay
+						if D==1:                                                        
 							EV_Cost_Summer[P]+=round(sum(np.multiply(R,EV_Load_Adj))/4,2)
 					else:
 						Household_Cost_Winter[P]+=round(sum(np.multiply(R,Household))/4,2)
