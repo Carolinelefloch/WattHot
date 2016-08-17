@@ -33,6 +33,10 @@ class EvLoadProfile:
         try:
             result = ev.get_load_profile(distance, maker, model, year, charger)
         except Exception as ex:
+            print "Exception in user code:"
+            print '-'*60
+            traceback.print_exc(file=sys.stdout)
+            print '-'*60
             self.logger.error(ex)
             description = ('Aliens have attacked our base! We will '
                            'be back as soon as we fight them off. '
@@ -66,6 +70,10 @@ class HouseLoadProfile:
                 'Deferred_Matrix':Deferred_Matrix.tolist()
             }
         except Exception as ex:
+            print "Exception in user code:"
+            print '-'*60
+            traceback.print_exc(file=sys.stdout)
+            print '-'*60
             self.logger.error(ex)
             description = ('Aliens have attacked our base! We will '
                            'be back as soon as we fight them off. '
