@@ -11,7 +11,7 @@ http://localhost:8000/ev/load/?distance=50&maker=Nissan&model=Leaf&year=2015&cha
 http://localhost:8000/house/load/?N_room=1&N_day=1&N_night=1&Ls_App=1,1,1,1,1,0&Monthly_Cost=0&Monthly_KWh=0
 
 ## 3) Cost calculation
-http://localhost:8000/cost/?Utility_Name=PG&E&Rate_Name=ETOUA&distance=50&maker=Nissan&model=Leaf&year=2012&charger=0&N_room=2&N_day=3&N_night=0&Ls_App=1,0,1,1,0,0&Monthly_Cost=200&conn_time=0,0,0,0&charging_outside=1
+http://localhost:8000/cost/?Utility_Name=PG&E&Rate_Name=ETOUA&distance=50&maker=Nissan&model=Leaf&year=2012&charger=0&N_room=2&N_day=3&N_night=0&Ls_App=1,0,1,1,0,0&Monthly_Cost=200&time=0,0,0,0&charging_outside=1
 
 ## 4) Description 
 http://localhost:8000/des/?Utility_Name=PG&E
