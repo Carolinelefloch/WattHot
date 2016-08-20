@@ -242,6 +242,7 @@ class Cost:
                     '''
                     )
             Monthly_Fixed_Fee=self.c1.execute(command,Input_Name).fetchall()[0][0]
+            print "The Monthly Fee Query Debug Query is:"+str(Monthly_Fixed_Fee)
             Cost=max(0,Cost-Monthly_Fixed_Fee)
 
             ###Predicting thr consumption based on the rate type
