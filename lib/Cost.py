@@ -461,9 +461,12 @@ class Cost:
                     '''
                 )
         Rate_Names=self.c1.execute(command,(Utility_Name,)).fetchall()
+        for i in range(len(Rate_Names)):
+            Rate_Names[i]=str(Rate_Names[i][0])
+
 
         for P in range(No_Rate):
-            Rate_Name=Rate_Names[P][0]
+            Rate_Name=Rate_Names[P]
             Cust_Tier=Get_Tier_Array(DT_house,DT_EV,Monthly_Allowance[P])
             #if P is 0:
             
