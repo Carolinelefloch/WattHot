@@ -25,6 +25,17 @@ class Description:
 					'''
 					)
 		Description=self.c1.execute(command,(utilityName,)).fetchall()
+
+		command=(
+					'''
+					SELECT Eligibility from Rate_Description
+					INNER JOIN Utility_Rate_Name
+					ON Rate_Description.Rate_id == Utility_Rate_Name.Rate_id
+					WHERE Utility_Name=? 
+					'''
+					)
+		elig=self.c1.execute(command,(utilityName,)).fetchall()
+
 		command=(
 					'''
 					SELECT Rate_Name	 from Utility_Rate_Name
@@ -33,9 +44,9 @@ class Description:
 					'''
 				)
 		Rate_Names=self.c1.execute(command,(utilityName,)).fetchall()
-		result={}
-		for index in range(len(Description)):
-			result[Rate_Names[index][0]]=Description[index]
+		
+		result={'Rate Name': Rate_Names,'Description':Description,'Eligibility':elig}
 		return result
+
 		
 		
