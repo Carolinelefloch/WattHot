@@ -19,6 +19,9 @@ http://localhost:8000/des/?Utility_Name=PG&E
 ## 5) Eligibility
 http://localhost:8000/eli/?Utility_Name=PG&E
 
+## 6) Connection Time
+http://localhost:8000/cost/conn/?Utility_Name=PG&Rate_Name=E1
+
 <p>Inputs:</p>
 <ol>
 <li>distance: Daily distnce driven bu the EV (miles)</li>
