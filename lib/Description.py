@@ -25,6 +25,9 @@ class Description:
                     '''
                     )
         Description=self.c1.execute(command,(utilityName,)).fetchall()
+        print Description[0]
+        #for i in range(len(Description)):
+            #Description[i]=str(Description[i])
 
         command=(
                     '''
@@ -36,6 +39,9 @@ class Description:
                     )
         elig=self.c1.execute(command,(utilityName,)).fetchall()
 
+        #for i in range(len(elig)):
+            #elig[i]=str(elig[i])
+
         command=(
                     '''
                     SELECT Rate_Name     from Utility_Rate_Name
@@ -44,6 +50,8 @@ class Description:
                     '''
                 )
         Rate_Names=self.c1.execute(command,(utilityName,)).fetchall()
+        for i in range(len(Rate_Names)):
+            Rate_Names[i]=str(Rate_Names[i][0])
         
         result={'Rate Name': Rate_Names,'Description':Description,'Eligibility':elig}
         return result
