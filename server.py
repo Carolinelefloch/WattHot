@@ -231,8 +231,10 @@ class ConnTime:
             elif Utility_Name=='Duke Energy Florida':
                 Rate_Name='Residential Service'
         Input_Name=(Utility_Name,Rate_Name)
+        print 'the image name is:'+str(Input_Name)
         try:
             connTime=COST.Get_ConnTime(Input_Name)
+            print connTime
         except Exception as ex:
             print "Exception in user code:"
             print '-'*60
@@ -278,6 +280,7 @@ class ImageName:
         Input_Name=(Utility_Name,Rate_Name)
         try:
             imageName=COST.Get_imageName(Input_Name)
+            print imageName
         except Exception as ex:
             print "Exception in user code:"
             print '-'*60
