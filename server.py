@@ -204,13 +204,107 @@ class Eligibility:
                 error_text,
                 30)
         resp.body = json.dumps(utilityDescription)
+
+class ConnTime:
+    def __init__(self):
+        self.logger = logging.getLogger('evapp.' + __name__)
+    def on_get(self, req, resp):
+        Utility_Name = req.get_param('Utility_Name')
+        if Utility_Name=='PG':
+            Utility_Name='PG&E'
+        if Utility_Name=="I don't know":
+            Utility_Name='PG&E'
+        Rate_Name = req.get_param('Rate_Name') 
+        if Rate_Name == "I don't know":
+            if Utility_Name=='PG&E':
+                Rate_Name='E1'
+            elif Utility_Name=='Duke Energy North Carolina':
+                Rate_Name='Residential Service Rate'
+            elif Utility_Name=='Duke Energy South Carolina':
+                Rate_name='Residential Service'
+            elif Utility_Name=='Duke Energy Indiana':
+                Rate_Name='Residential and Farm Service'
+            elif Utility_Name=='Duke Energy Kentucky':
+                Rate_Name='Residential Service'
+            elif Utility_Name=='Duke Energy Ohio':
+                Rate_Name='Residential Service'
+            elif Utility_Name=='Duke Energy Florida':
+                Rate_Name='Residential Service'
+        Input_Name=(Utility_Name,Rate_Name)
+        try:
+            connTime=COST.Get_ConnTime(Input_Name)
+        except Exception as ex:
+            print "Exception in user code:"
+            print '-'*60
+            traceback.print_exc(file=sys.stdout)
+            print '-'*60
+            self.logger.error(ex)
+            description = ('Aliens have attacked our base! We will '
+                               'be back as soon as we fight them off. '
+                               'We appreciate your patience.')
+
+            raise falcon.HTTPServiceUnavailable(
+                'Service Outage',
+                description,
+                30)
+
+        resp.body = connTime
+
+class ImageName:
+    def __init__(self):
+        self.logger = logging.getLogger('evapp.' + __name__)
+    def on_get(self, req, resp):
+        Utility_Name = req.get_param('Utility_Name')
+        if Utility_Name=='PG':
+            Utility_Name='PG&E'
+        if Utility_Name=="I don't know":
+            Utility_Name='PG&E'
+        Rate_Name = req.get_param('Rate_Name') 
+        if Rate_Name == "I don't know":
+            if Utility_Name=='PG&E':
+                Rate_Name='E1'
+            elif Utility_Name=='Duke Energy North Carolina':
+                Rate_Name='Residential Service Rate'
+            elif Utility_Name=='Duke Energy South Carolina':
+                Rate_name='Residential Service'
+            elif Utility_Name=='Duke Energy Indiana':
+                Rate_Name='Residential and Farm Service'
+            elif Utility_Name=='Duke Energy Kentucky':
+                Rate_Name='Residential Service'
+            elif Utility_Name=='Duke Energy Ohio':
+                Rate_Name='Residential Service'
+            elif Utility_Name=='Duke Energy Florida':
+                Rate_Name='Residential Service'
+        Input_Name=(Utility_Name,Rate_Name)
+        try:
+            imageName=COST.Get_imageName(Input_Name)
+        except Exception as ex:
+            print "Exception in user code:"
+            print '-'*60
+            traceback.print_exc(file=sys.stdout)
+            print '-'*60
+            self.logger.error(ex)
+            description = ('Aliens have attacked our base! We will '
+                               'be back as soon as we fight them off. '
+                               'We appreciate your patience.')
+
+            raise falcon.HTTPServiceUnavailable(
+                'Service Outage',
+                description,
+                30)
+
+        resp.body = imageName
 app = falcon.API()
 ev_load_profile = EvLoadProfile()
 house_load_profile = HouseLoadProfile()
 energy_cost = EnergyCost()
 description=Description()
 eligbility=Eligibility()
+connTime=ConnTime()
+image=ImageName()
 
+app.add_route('/cost/conn',connTime)
+app.add_route('/cost/image',image)
 app.add_route('/ev/load', ev_load_profile)
 app.add_route('/house/load', house_load_profile)
 app.add_route('/cost', energy_cost)
