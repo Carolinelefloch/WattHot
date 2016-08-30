@@ -22,6 +22,10 @@ http://localhost:8000/des/?Utility_Name=PG&E
 ## 5) Connection Time
 http://localhost:8000/cost/conn/?Utility_Name=PG&Rate_Name=E1
 
+6) Image
+http://localhost:8000/cost/image/?Utility_Name=PG&Rate_Name=E1
+
+
 <p>Inputs:</p>
 <ol>
 <li>distance: Daily distnce driven bu the EV (miles)</li>
