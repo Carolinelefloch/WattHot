@@ -214,27 +214,11 @@ class ConnTime:
             Utility_Name='PG&E'
         if Utility_Name=="I don't know":
             Utility_Name='PG&E'
-        Rate_Name = req.get_param('Rate_Name') 
-        if Rate_Name == "I don't know":
-            if Utility_Name=='PG&E':
-                Rate_Name='E1'
-            elif Utility_Name=='Duke Energy North Carolina':
-                Rate_Name='Residential Service Rate'
-            elif Utility_Name=='Duke Energy South Carolina':
-                Rate_name='Residential Service'
-            elif Utility_Name=='Duke Energy Indiana':
-                Rate_Name='Residential and Farm Service'
-            elif Utility_Name=='Duke Energy Kentucky':
-                Rate_Name='Residential Service'
-            elif Utility_Name=='Duke Energy Ohio':
-                Rate_Name='Residential Service'
-            elif Utility_Name=='Duke Energy Florida':
-                Rate_Name='Residential Service'
-        Input_Name=(Utility_Name,Rate_Name)
-        print 'the image name is:'+str(Input_Name)
+        
+        print 'the image name is:'+str(Utility_Name)
         try:
-            connTime=COST.Get_ConnTime(Input_Name)
-            print connTime
+            connTime=DES.Get_ConnTime(Utility_Name)
+            #print connTime[0]
         except Exception as ex:
             print "Exception in user code:"
             print '-'*60
@@ -250,7 +234,7 @@ class ConnTime:
                 description,
                 30)
 
-        resp.body = connTime
+        resp.body = json.dumps(connTime)
 
 class ImageName:
     def __init__(self):
@@ -261,25 +245,9 @@ class ImageName:
             Utility_Name='PG&E'
         if Utility_Name=="I don't know":
             Utility_Name='PG&E'
-        Rate_Name = req.get_param('Rate_Name') 
-        if Rate_Name == "I don't know":
-            if Utility_Name=='PG&E':
-                Rate_Name='E1'
-            elif Utility_Name=='Duke Energy North Carolina':
-                Rate_Name='Residential Service Rate'
-            elif Utility_Name=='Duke Energy South Carolina':
-                Rate_name='Residential Service'
-            elif Utility_Name=='Duke Energy Indiana':
-                Rate_Name='Residential and Farm Service'
-            elif Utility_Name=='Duke Energy Kentucky':
-                Rate_Name='Residential Service'
-            elif Utility_Name=='Duke Energy Ohio':
-                Rate_Name='Residential Service'
-            elif Utility_Name=='Duke Energy Florida':
-                Rate_Name='Residential Service'
-        Input_Name=(Utility_Name,Rate_Name)
+        
         try:
-            imageName=COST.Get_imageName(Input_Name)
+            imageName=DES.Get_imageName(Utility_Name)
             print imageName
         except Exception as ex:
             print "Exception in user code:"
@@ -296,7 +264,8 @@ class ImageName:
                 description,
                 30)
 
-        resp.body = imageName
+        resp.body = json.dumps(imageName)
+        
 app = falcon.API()
 ev_load_profile = EvLoadProfile()
 house_load_profile = HouseLoadProfile()

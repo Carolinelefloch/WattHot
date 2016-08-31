@@ -74,33 +74,7 @@ class Cost:
                 Get_Cost:                   Convert the Consumption to Cost
                 Return the overall cost,ev cost,deferred cost,household cost of all rate given the name of the utility
     '''
-    def Get_ConnTime(self,Input_Name):
-        command=(
-                    '''
-                    SELECT Summer_Peak_End from Rate_Information
-                    INNER JOIN Utility_Rate_Name
-                    ON Rate_Information.Rate_id == Utility_Rate_Name.Rate_id
-                    WHERE Utility_Name=? AND Rate_Name=?
-                    '''
-                    )
-        connTime=self.c1.execute(command,Input_Name).fetchall()[0][0]
-        if connTime is None:
-            return 'charge when you perfer'
-        #print connTime
-        else:
-            return connTime
-        #Allowance=Allowance[0]
-    def Get_imageName(self,Input_Name):
-        command=(
-                    '''
-                    SELECT Image_Name from Image
-                    INNER JOIN Utility_Rate_Name
-                    ON Image.Rate_id == Utility_Rate_Name.Rate_id
-                    WHERE Utility_Name=? AND Rate_Name=?
-                    '''
-                    )
-        imageName=self.c1.execute(command,Input_Name).fetchall()[0][0]
-        return imageName
+    
 
     def Get_Allowance(self,Input_Name):
         command=(
