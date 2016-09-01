@@ -45,8 +45,8 @@ http://localhost:8000/cost/?Utility_Name=PG&E&Rate_Name=ETOUA&distance=50&maker=
       
 http://localhost:8000/des/?Utility_Name=PG&E
 
-<p>Inputs:</p
-<li>Utility_Name</li>
+<p>Inputs:Utility_Name</p
+
 
 <p>Ouputs: description,eligibilit of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
 
@@ -55,8 +55,7 @@ http://localhost:8000/des/?Utility_Name=PG&E
 ## 3) Connection Time
 http://localhost:8000/cost/conn/?Utility_Name=PG&E
 
-<p>Inputs:</p
-<li>Utility_Name</li>
+<p>Inputs:Utility_Name</p
 
 <p>Ouputs: connection time of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
 
@@ -64,8 +63,7 @@ http://localhost:8000/cost/conn/?Utility_Name=PG&E
 ## 4) Image
 http://localhost:8000/cost/image/?Utility_Name=PG&E
 
-<p>Inputs:</p
-<li>Utility_Name</li>
+<p>Inputs:Utility_Name</p
 
 <p>Ouputs: static image name for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
 
