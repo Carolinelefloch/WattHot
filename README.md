@@ -57,15 +57,15 @@ http://localhost:8000/cost/conn/?Utility_Name=PG&E
 
 <p>Inputs:</p
 <li>Utility_Name</li>
-</ol>
+
 <p>Ouputs: connection time of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
-<ol>
+
 
 ## 4) Image
 http://localhost:8000/cost/image/?Utility_Name=PG&E
 
 <p>Inputs:</p
 <li>Utility_Name</li>
-</ol>
+
 <p>Ouputs: static image name for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
-<ol>
+
