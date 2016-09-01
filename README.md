@@ -1,28 +1,24 @@
 # WattHot
 Predict energy consumption and energy costs. Create APIs to be querried by watthot.com
-Watthot proposes 6 apis: 1) EV load calculation , 2) Household load calculation , 3) Cost calculation 4)Description Query 5) Connection Time Query 6)Front End Static Image Name Query 
+Watthot proposes 6 apis: 1) Cost calculation 2)Description Query 3) Connection Time Query 4)Front End Static Image Name Query 
 
 <Rest-API>
 
-##  1) EV load calcultation
-http://localhost:8000/ev/load/?distance=50&maker=Nissan&model=Leaf&year=2015&charger=2
 
-## 2) Household load calculation
-http://localhost:8000/house/load/?N_room=1&N_day=1&N_night=1&Ls_App=1,1,1,1,1,0&Monthly_Cost=0&Monthly_KWh=0
 
-## 3) Cost calculation
+## 1) Cost calculation
 http://localhost:8000/cost/?Utility_Name=PG&E&Rate_Name=ETOUA&distance=50&maker=Nissan&model=Leaf&year=2012&charger=0&N_room=2&N_day=3&N_night=0&Ls_App=1,0,1,1,0,0&Monthly_Cost=200&time=0,0,0,0&charging_outside=1
 
-## 4) Description 
+## 2) Description 
       return the description and eligibility
 http://localhost:8000/des/?Utility_Name=PG&E
 
 
 
-## 5) Connection Time
+## 3) Connection Time
 http://localhost:8000/cost/conn/?Utility_Name=PG&E
 
-##6) Image
+## 4) Image
 http://localhost:8000/cost/image/?Utility_Name=PG&E
 
 <p>Inputs:</p>
