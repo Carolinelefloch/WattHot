@@ -47,9 +47,9 @@ http://localhost:8000/des/?Utility_Name=PG&E
 
 <p>Inputs:</p
 <li>Utility_Name</li>
-</ol>
+
 <p>Ouputs: description,eligibilit of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
-<ol>
+
 
 
 ## 3) Connection Time
