@@ -52,7 +52,6 @@ http://localhost:8000/des/?Utility_Name=PG&E
 <ol>
 
 
-
 ## 3) Connection Time
 http://localhost:8000/cost/conn/?Utility_Name=PG&E
 
@@ -61,6 +60,7 @@ http://localhost:8000/cost/conn/?Utility_Name=PG&E
 </ol>
 <p>Ouputs: connection time of cost for each utility rate (PG&E: [ETOU-A,ETOU-B,EV-TOU,E1] )</p>
 <ol>
+
 ## 4) Image
 http://localhost:8000/cost/image/?Utility_Name=PG&E
 
