@@ -1,6 +1,6 @@
 # WattHot
 Predict energy consumption and energy costs. Create APIs to be querried by watthot.com
-Watthot proposes 3 apis: 1) EV load calculation , 2) Household load calculation , 3) Cost calculation 
+Watthot proposes 6 apis: 1) EV load calculation , 2) Household load calculation , 3) Cost calculation 4)Description Query 5) Connection Time Query 6)Front End Static Image Name Query 
 
 <Rest-API>
 
@@ -23,7 +23,7 @@ http://localhost:8000/des/?Utility_Name=PG&E
 http://localhost:8000/cost/conn/?Utility_Name=PG&E
 
 ##6) Image
-http://localhost:8000/cost/image/?Utility_Name=PG&
+http://localhost:8000/cost/image/?Utility_Name=PG&E
 
 <p>Inputs:</p>
 <ol>

@@ -12,7 +12,6 @@ from lib import evLoad
 from lib import houseLoad as house
 from lib import Cost as C
 from lib import Description as Des
-from lib import Eligibility as Dli
 import sys
 import traceback
 ev = evLoad.EV('db/ev_model.db')
@@ -182,28 +181,6 @@ class Description:
                 error_text,
                 30)
         resp.body = json.dumps(utilityDescription)
-class Eligibility:
-    def __init__(self):
-        self.logger = logging.getLogger('evapp.' + __name__)
-    def on_get(self, req, resp):
-        Utility_Name = req.get_param('Utility_Name')
-        if Utility_Name=='PG':
-            Utility_Name='PG&E'
-        if Utility_Name=="I don't know":
-            Utility_Name='PG&E'
-        try:
-            utilityDescription=DLI.Get_eli(Utility_Name)
-        except Exception as ex:
-            self.logger.error(ex)
-            error_text= ('Aliens have attacked our base! We will'
-                           'be back as soon as we fight them off.'
-                           'We appreciate your patience.')
-
-            raise falcon.HTTPServiceUnavailable(
-                'Service Outage',
-                error_text,
-                30)
-        resp.body = json.dumps(utilityDescription)
 
 class ConnTime:
     def __init__(self):
@@ -281,4 +258,4 @@ app.add_route('/ev/load', ev_load_profile)
 app.add_route('/house/load', house_load_profile)
 app.add_route('/cost', energy_cost)
 app.add_route('/des',description)
-app.add_route('/eli',eligbility)
+
