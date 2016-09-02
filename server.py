@@ -17,7 +17,7 @@ import traceback
 ev = evLoad.EV('db/ev_model.db')
 COST=C.Cost('db/Tariff_Rate_New.db','db/Household_15mins.db')
 DES=Des.Description('db/Tariff_Rate_New.db')
-DLI=Dli.Eligibility('db/Tariff_Rate_New.db')
+
 class EvLoadProfile:
     def __init__(self):
         self.logger = logging.getLogger('evapp.' + __name__)
@@ -192,7 +192,6 @@ class ConnTime:
         if Utility_Name=="I don't know":
             Utility_Name='PG&E'
         
-        print 'the image name is:'+str(Utility_Name)
         try:
             connTime=DES.Get_ConnTime(Utility_Name)
             #print connTime[0]
@@ -225,7 +224,7 @@ class ImageName:
         
         try:
             imageName=DES.Get_imageName(Utility_Name)
-            print imageName
+            
         except Exception as ex:
             print "Exception in user code:"
             print '-'*60
@@ -242,7 +241,7 @@ class ImageName:
                 30)
 
         resp.body = json.dumps(imageName)
-        
+###########Call the class################      
 app = falcon.API()
 ev_load_profile = EvLoadProfile()
 house_load_profile = HouseLoadProfile()
@@ -251,11 +250,15 @@ description=Description()
 eligbility=Eligibility()
 connTime=ConnTime()
 image=ImageName()
+#########################################
 
+
+###########Add Router####################
 app.add_route('/cost/conn',connTime)
 app.add_route('/cost/image',image)
 app.add_route('/ev/load', ev_load_profile)
 app.add_route('/house/load', house_load_profile)
 app.add_route('/cost', energy_cost)
 app.add_route('/des',description)
+#########################################
 
