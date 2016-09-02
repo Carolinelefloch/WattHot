@@ -247,7 +247,7 @@ ev_load_profile = EvLoadProfile()
 house_load_profile = HouseLoadProfile()
 energy_cost = EnergyCost()
 description=Description()
-eligbility=Eligibility()
+
 connTime=ConnTime()
 image=ImageName()
 #########################################
