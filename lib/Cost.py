@@ -125,6 +125,8 @@ class Cost:
         return Rate_Vector
 
     def Get_EV_Def_Cost(self,Charging_Outside,Utility_Name,Rate_Name,EV_Load,Ls_App,No_EV=5,Cost=0):
+        #Get the cost/day due to EVs and deferrable loads - this depends on the total household cost
+        #We need to know the total household daily cost to know the tier at ecah day, and the corresponding EV cost
         ###################################################################
         #######If Charging the EV outside the home,half the EV Load########
         ###################################################################
@@ -152,10 +154,13 @@ class Cost:
         Tier_Type=self.c1.execute(command,Input_Name).fetchall()[0]
         Tier_Type=Tier_Type[0]
         
-        Allowance,N_Tier=self.Get_Allowance(Input_Name)
-        Daily_Cost=Cost/float(30)
+        Allowance,N_Tier=self.Get_Allowance(Input_Name) #Allowance: the amount of electricity required to move up the tiers over a month
+        Daily_Cost=Cost/float(30) #Cost is the monthly average cost given by the user
 
         def Get_Tier_Array(Daily_Cost,Allowance_Cost):
+            # Allownance_Cost is a vector containing the baseline barriers (certain rates can have 3 tiers with 3 allowance barriers)
+            # This funtion returns the 30 size vector Tier, which shows the Tier per day of the month
+            # Acc_Cost tracks the monthly cost day per day
             Acc_Cost=0;Tier=[]
 
             for day in range(30):
@@ -169,24 +174,25 @@ class Cost:
                         Tier.append(len(Allowance_Cost))
             return Tier
 
-        if Tier_Type==0:
+        if Tier_Type==0: #If not a tiered rate, the Tier is 0 every day during the month
             Tier=[];[Tier.append(0) for i in range(30)]                         
-        elif Tier_Type==1 and N_Tier==1:
+        elif Tier_Type==1 and N_Tier==1: 
             Tier=[];[Tier.append(0) for i in range(30)]                         
         else:
             Tier_Tariff=self.Get_Tier_Rate(Input_Name)
             Allowance_Cost=[];[Allowance_Cost.append(Allowance[i]*Tier_Tariff[i]) for i in range(len(Allowance))]
             Tier=Get_Tier_Array(Daily_Cost,Allowance_Cost)
 
-        EV_Cost_Summer=0;EV_Cost_Winter=0;Season=['summer','winter']
+        EV_Cost_Summer=0;EV_Cost_Winter=0;Season=['summer','winter'] #Find teh cost per summer and winter
         for S in Season:
             for index in range(30):
                 T=Tier[index];W=self.Week_day[index]
-                Input=(Utility_Name,Rate_Name,T,W,S)
+                Input=(Utility_Name,Rate_Name,T,W,S) 
                 
-                Rate_Vector=self.Get_Hourly_Rate(Input)
+                Rate_Vector=self.Get_Hourly_Rate(Input) #Gives the 15 min electricity rate
                 if S=='summer':
-                    EV_Cost_Summer+=sum(np.multiply(Adj_EV_Load,Rate_Vector))/float(4)
+                    #Multiply load per rate, and sum everything to get teh cost
+                    EV_Cost_Summer+=sum(np.multiply(Adj_EV_Load,Rate_Vector))/float(4) # divided by 4 because the data is every 15min
                 else:
                     EV_Cost_Winter+=sum(np.multiply(Adj_EV_Load,Rate_Vector))/float(4)
         EV_Cost=(EV_Cost_Winter)#+EV_Cost_Summer)/2
@@ -196,6 +202,9 @@ class Cost:
             return Cost
 
     def Get_Consumption_Without_Cost(self,N_room, N_day, N_night):
+        # Returns the inferred consumption profile is the person doesn't give us his monthly avaerage cost
+        # In thsi case, we use statistics from previsous research, taht gives avergae consumption as a function of 
+        # nb_people in the household and nb_room in the house. This data is contained in the database (self.Ave_Input[(N_people,N_room)])
         N_people=N_day+N_night
         if N_people==0:
             N_people+=1
@@ -203,6 +212,9 @@ class Cost:
         return self.Ave_Input[(N_people,N_room)]
 
     def Matching(self,Input_List):
+        # Based on inputs nb_people in the household and nb_room in the house, we infer the load shape.
+        # These load shapes are stored in the database as self.Profile.
+        # The total consumption is given by Profile * Avg_Consumption
         if Input_List[0]<=1 and Input_List[1]<=1:
             return self.Profile['Profile 3']
         if Input_List[0]>1 and Input_List[1]<=3:
@@ -216,6 +228,8 @@ class Cost:
                 return self.Profile['Profile 2']
     
     def Get_Monthly_Consumption(self,Charging_Outside,Utility_Name,Rate_Name,N_room, N_day,N_night,Ls_App,EV_Load,Cost,No_EV=5):
+    # Retunrs the monthly consumption based on the monthly cost.
+    # Note the this depends on the utility rate
     #Put three input(number of day/night/room) to a List
         def Input_Ls(N_day=None,N_night=None,Ls_App=[]):                
             return [N_day,N_night,Ls_App]
